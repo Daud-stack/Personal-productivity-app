@@ -1,0 +1,37 @@
+<section id="tip-library" class="card mb-4" data-aos="fade-up" data-aos-delay="250">
+  <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+    <span>Tip Library</span>
+    <span class="badge bg-dark rounded-pill">{{ saved_tips|length }}</span>
+  </div>
+  <div class="card-body p-0">
+    <div class="list-group list-group-flush">
+      {% if saved_tips %}
+        {% for tip in saved_tips %}
+        <div class="list-group-item bg-transparent py-3 border-0 border-bottom">
+          <div class="d-flex justify-content-between align-items-start gap-2">
+            <p class="small mb-0 flex-grow-1">"{{ tip.content }}"</p>
+            <form action="{{ url_for('dashboard.delete_saved_tip', tip_id=tip.id) }}" method="post" onsubmit="return confirm('Remove from library?');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-link btn-sm p-0 text-danger opacity-50 hover-opacity-100">
+                <i class="bi bi-trash"></i>
+              </button>
+            </form>
+          </div>
+          <div class="mt-2">
+            <small class="very-small text-muted">{{ tip.saved_at.strftime('%b %d, %Y') }}</small>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="text-center py-4 px-3">
+          <p class="text-muted small mb-0">Your tip library is empty. Save daily tips to build your productivity knowledge!</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hover-opacity-100:hover { opacity: 1 !important; }
+  .very-small { font-size: 0.7rem; }
+</style>

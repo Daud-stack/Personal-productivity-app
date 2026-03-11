@@ -1,0 +1,48 @@
+<section id="habits" class="card mb-4" data-aos="fade-up" data-aos-delay="150">
+  <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+    <span>Daily Habits</span>
+    <small>{{ datetime.now().strftime('%B %d, %Y') }}</small>
+  </div>
+  <div class="card-body">
+    <div class="row g-3">
+      {% for habit in habits %}
+      {% set is_done = habit_statuses.get(habit.id, False) %}
+      <div class="col-md-3">
+        <a href="{{ url_for('dashboard.toggle_habit', habit_id=habit.id) }}" 
+           class="card h-100 text-decoration-none border-0 shadow-sm habit-card {% if is_done %}bg-success-light border-success{% endif %}"
+           style="transition: all 0.2s;">
+           <div class="card-body text-center p-3">
+             <i class="bi {{ habit.icon }} h2 mb-2 {% if is_done %}text-success{% else %}text-muted{% endif %}"></i>
+             <h6 class="mb-0 {% if is_done %}text-success fw-bold{% else %}text-muted{% endif %}">{{ habit.name }}</h6>
+             {% if is_done %}
+               <span class="badge bg-success mt-2">Done</span>
+             {% else %}
+               <span class="badge bg-light text-muted mt-2">Pending</span>
+             {% endif %}
+           </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="card-footer bg-light-subtle py-2">
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <i class="bi bi-lightbulb-fill text-warning me-2"></i>
+        <small class="text-muted italic"><strong>Micro-Learning:</strong> {{ daily_tip }}</small>
+      </div>
+      <form action="{{ url_for('dashboard.save_tip') }}" method="post" class="ms-2">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="tip_content" value="{{ daily_tip }}">
+        <button type="submit" class="btn btn-sm btn-outline-warning p-1 leading-none border-0" title="Save to Library">
+          <i class="bi bi-bookmark-plus h6 mb-0"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bg-success-light { background-color: rgba(25, 135, 84, 0.05); }
+  .habit-card:hover { transform: scale(1.03); box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important; }
+</style>

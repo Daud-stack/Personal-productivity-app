@@ -1,0 +1,140 @@
+<section id="focus-hub" class="card mb-4 overflow-hidden border-0 shadow-sm" data-aos="fade-up" data-aos-delay="50">
+  <div class="card-body p-0">
+    <div class="row g-0">
+      <div class="col-md-7 p-4 focus-timer-area text-center d-flex flex-column align-items-center justify-content-center">
+        <h5 class="fw-bold mb-4">Deep Work Focus</h5>
+        
+        <div class="timer-display position-relative mb-4">
+          <svg class="progress-ring" width="220" height="220">
+            <circle class="progress-ring__circle-bg" stroke="rgba(0,0,0,0.05)" stroke-width="8" fill="transparent" r="100" cx="110" cy="110"/>
+            <circle class="progress-ring__circle" stroke="#0d6efd" stroke-width="8" stroke-dasharray="628.3" stroke-dashoffset="0" stroke-linecap="round" fill="transparent" r="100" cx="110" cy="110"/>
+          </svg>
+          <div class="timer-text position-absolute top-50 start-50 translate-middle">
+            <h1 class="display-3 fw-bold mb-0" id="minutes">25</h1>
+            <span class="text-muted h4" id="seconds">00</span>
+          </div>
+        </div>
+
+        <div class="timer-controls d-flex gap-2">
+          <button id="startTimer" class="btn btn-primary px-4 rounded-pill">Start Focus</button>
+          <button id="resetTimer" class="btn btn-outline-secondary px-4 rounded-pill">Reset</button>
+        </div>
+      </div>
+
+      <div class="col-md-5 p-4 bg-light-subtle d-flex flex-column justify-content-between">
+        <div>
+          <h6 class="text-muted small text-uppercase fw-bold mb-3">Today's Focus Stats</h6>
+          <div class="mb-4">
+            <h2 class="fw-bold" id="totalFocusMinutes">{{ total_focus_minutes }}</h2>
+            <small class="text-muted">Total minutes focused today</small>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label small">Focus Goal</label>
+            <div class="progress progress-sm">
+              {% set focus_goal = 120 %}
+              {% set focus_prog = (total_focus_minutes / focus_goal * 100) if total_focus_minutes < focus_goal else 100 %}
+              <div class="progress-bar bg-info" style="width: {{ focus_prog }}%"></div>
+            </div>
+            <div class="d-flex justify-content-between mt-1">
+                <small class="very-small text-muted">{{ total_focus_minutes }} / 120m</small>
+                <small class="very-small text-info fw-bold">{{ focus_prog|round|int }}%</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4">
+            <p class="small text-muted italic mb-0">"The successful warrior is the average man, with laser-like focus."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .progress-ring__circle {
+    transition: stroke-dashoffset 0.35s;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+  }
+  .focus-timer-area { background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); }
+  body.dark-mode .focus-timer-area { background: #1e293b; }
+  .timer-display { width: 220px; height: 220px; }
+  .very-small { font-size: 0.7rem; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let timerInterval;
+    let totalSeconds = 25 * 60;
+    let currentSeconds = totalSeconds;
+    let isRunning = false;
+
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+    const startBtn = document.getElementById('startTimer');
+    const circle = document.querySelector('.progress-ring__circle');
+    const radius = circle.r.baseVal.value;
+    const circumference = radius * 2 * Math.PI;
+
+    circle.style.strokeDasharray = `${circumference} ${circumference}`;
+    circle.style.strokeDashoffset = 0;
+
+    function setProgress(percent) {
+        const offset = circumference - (percent / 100 * circumference);
+        circle.style.strokeDashoffset = offset;
+    }
+
+    function updateDisplay() {
+        const mins = Math.floor(currentSeconds / 60);
+        const secs = currentSeconds % 60;
+        minutesEl.innerText = mins.toString().padStart(2, '0');
+        secondsEl.innerText = secs.toString().padStart(2, '0');
+        setProgress((currentSeconds / totalSeconds) * 100);
+    }
+
+    startBtn.addEventListener('click', function() {
+        if (isRunning) {
+            clearInterval(timerInterval);
+            startBtn.innerText = 'Resume';
+            isRunning = false;
+        } else {
+            isRunning = true;
+            startBtn.innerText = 'Pause';
+            timerInterval = setInterval(() => {
+                currentSeconds--;
+                updateDisplay();
+                if (currentSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    isRunning = false;
+                    startBtn.innerText = 'Focus Done';
+                    saveSession(25);
+                    alert("Focus session complete! Great job.");
+                    location.reload();
+                }
+            }, 1000);
+        }
+    });
+
+    document.getElementById('resetTimer').addEventListener('click', function() {
+        clearInterval(timerInterval);
+        isRunning = false;
+        currentSeconds = totalSeconds;
+        startBtn.innerText = 'Start Focus';
+        updateDisplay();
+    });
+
+    function saveSession(duration) {
+        const formData = new FormData();
+        formData.append('duration', duration);
+        formData.append('csrf_token', '{{ csrf_token() }}');
+        
+        fetch("{{ url_for('dashboard.log_focus') }}", {
+            method: 'POST',
+            body: formData
+        });
+    }
+
+    updateDisplay();
+});
+</script>

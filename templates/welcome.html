@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row min-vh-75 align-items-center py-5">
+    <div class="col-lg-6" data-aos="fade-right">
+        <h1 class="display-3 fw-bold mb-3">Master Your <span class="text-primary">Productivity</span></h1>
+        <p class="lead mb-4 text-muted">A sleek, minimal, and premium tool to track your weekly progress, visualize your goals, and manage your personal growth journey.</p>
+        <div class="d-flex gap-3">
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('dashboard.index') }}" class="btn btn-primary btn-lg px-4">Go to Dashboard</a>
+            {% else %}
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg px-4">Get Started</a>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-outline-secondary btn-lg px-4">Login</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-6" data-aos="fade-left">
+        <div class="hero-visual p-5 bg-white shadow-lg rounded-4 text-center">
+            <h2 class="h4 mb-4">Focus on what matters</h2>
+            <div class="d-flex justify-content-around mb-4">
+                <div class="stat-item">
+                    <div class="h3 fw-bold text-primary">85%</div>
+                    <div class="small-muted">Health</div>
+                </div>
+                <div class="stat-item">
+                    <div class="h3 fw-bold text-success">92%</div>
+                    <div class="small-muted">Career</div>
+                </div>
+                <div class="stat-item">
+                    <div class="h3 fw-bold text-info">78%</div>
+                    <div class="small-muted">Finance</div>
+                </div>
+            </div>
+            <div class="progress progress-sm mb-2">
+                <div class="progress-bar" role="progressbar" style="width: 85%"></div>
+            </div>
+            <p class="small text-muted fst-italic mt-3">"The way to get started is to quit talking and begin doing."</p>
+        </div>
+    </div>
+</div>
+
+<div class="row py-5 mt-5">
+    <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="card h-100 border-0 shadow-sm p-4 text-center">
+            <div class="h1 text-primary mb-3">📈</div>
+            <h3 class="h5 fw-bold">Weekly Tracking</h3>
+            <p class="text-muted small">Monitor your performance across four key pillars of life every single week.</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="card h-100 border-0 shadow-sm p-4 text-center">
+            <div class="h1 text-primary mb-3">🌟</div>
+            <h3 class="h5 fw-bold">Vision Board</h3>
+            <p class="text-muted small">Keep your dreams and inspirations front and center with quotes and images.</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="card h-100 border-0 shadow-sm p-4 text-center">
+            <div class="h1 text-primary mb-3">🛠️</div>
+            <h3 class="h5 fw-bold">Smart Admin</h3>
+            <p class="text-muted small">Powerful administration tools to manage your personal productivity environment.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

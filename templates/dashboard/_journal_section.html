@@ -1,0 +1,53 @@
+<section id="journal" class="card mb-4" data-aos="fade-up" data-aos-delay="200">
+  <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+    <span>Mindset & Reflections</span>
+    <button class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#journalModal">New Entry</button>
+  </div>
+  <div class="card-body">
+    {% if journals %}
+    <div class="list-group list-group-flush">
+      {% for entry in journals %}
+      <div class="list-group-item px-0 border-0 mb-3" style="background: transparent;">
+        <div class="d-flex justify-content-between align-items-start mb-1">
+          <h6 class="mb-0 fw-bold">{{ entry.title or "Untitled Reflection" }}</h6>
+          <small class="text-muted">{{ entry.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+        </div>
+        <p class="text-muted small mb-0">{{ entry.content }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-4">
+      <p class="text-muted mb-0">No journal entries yet. Capture your wins and lessons learned!</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Journal Modal -->
+<div class="modal fade" id="journalModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">New Entry</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form action="{{ url_for('dashboard.add_journal') }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Title (Optional)</label>
+            <input type="text" name="title" class="form-control" placeholder="e.g. Highlights of the day">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">What's on your mind?</label>
+            <textarea name="content" class="form-control" rows="5" required placeholder="Write down your reflections, gratitude, or lessons..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-dark">Save Entry</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

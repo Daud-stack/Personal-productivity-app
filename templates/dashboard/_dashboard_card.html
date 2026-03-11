@@ -1,0 +1,164 @@
+<section id="dashboard" class="mb-4" data-aos="fade-up" data-aos-delay="100">
+  <div class="card shadow-sm">
+    <div
+      class="card-header d-flex justify-content-between align-items-center bg-white border-0"
+    >
+      <h5 class="mb-0">Performance Dashboard</h5>
+      <small class="text-muted"
+        >Last updated: {{ datetime.now().strftime('%Y-%m-%d') }}</small
+      >
+    </div>
+
+    <div class="card-body">
+      <!-- Summary row -->
+      <div class="row g-3">
+        <div class="col-md-3">
+          <div class="card summary-card h-100 border-0">
+            <div class="card-body text-center">
+              <h6 class="text-muted">Overall Progress</h6>
+              <h2 class="display-6 mb-0">{{ avg_completion }}%</h2>
+              <small class="text-muted">Average completion</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-9">
+          <div class="card h-100 border-0">
+            <div class="card-body">
+              <div
+                class="d-flex justify-content-between align-items-start mb-3"
+              >
+                <div>
+                  <h6 class="mb-0 text-success">Financial Goal</h6>
+                  <p class="small-muted mb-0">
+                    ${{ settings.get('current_amount', 0) }} of ${{
+                    settings.get('goal_amount', 600) }} • Target: {{
+                    settings.get('goal_date', '2026-05-31') }}
+                  </p>
+                </div>
+                <div>
+                  <button
+                    class="btn btn-sm btn-outline-secondary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#settingsModal"
+                    aria-label="Edit settings"
+                  >
+                    <i class="bi bi-gear"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="progress financial-goal-progress mb-3 shadow-sm" style="height: 20px; border-radius: 12px;">
+                {% set progress = (settings.get('current_amount', 0)|int /
+                (settings.get('goal_amount', 600)|int) * 100)|round %}
+                <div
+                  class="progress-bar bg-success-vibrant progress-bar-striped progress-bar-animated"
+                  role="progressbar"
+                  style="width: {{ progress }}%; border-radius: 12px;"
+                  aria-valuenow="{{ progress }}"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                >
+                  <span class="fw-bold px-2" style="font-size: 0.85rem;">{{ progress }}%</span>
+                </div>
+              </div>
+              <div class="d-flex gap-2 flex-wrap">
+                <span class="me-3 small-muted">
+                  <strong>${{ settings.get('current_amount', 0) }}</strong>
+                  saved
+                </span>
+                <span class="small-muted">
+                  <strong>${{ settings.get('goal_amount', 600) }}</strong>
+                  goal
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Categories + framework -->
+      <div class="row mt-4 g-3">
+        <div class="col-lg-6">
+          <div class="card h-100 shadow-sm border-0">
+            <div class="card-header bg-info text-white">
+              Performance by Category
+            </div>
+            <div class="card-body">
+              {% set last = weekly_data[-1] if weekly_data else None %} {% for
+              cat, color in
+              [('health','success'),('career','info'),('finance','warning'),('personal','secondary')]
+              %} {% set val = last[cat]|int if last else 0 %}
+              <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                  <span class="category-label text-capitalize">{{ cat }}</span>
+                  <span class="category-percentage fw-bold text-{{ color }}">{{ val }}%</span>
+                </div>
+                <div class="progress category-progress" style="height: 14px;">
+                  <div
+                    class="progress-bar bg-{{ color }} shadow-sm"
+                    role="progressbar"
+                    style="--bs-progress-bar-width: {{ val }}%; border-radius: 10px;"
+                    aria-valuenow="{{ val|int }}"
+                    aria-label="{{ cat }} progress"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="card h-100 shadow-sm border-0">
+            <div class="card-header bg-warning text-dark">
+              Daily Success Framework
+            </div>
+            <div class="card-body">
+              <ul class="list-unstyled mb-0">
+                <li class="mb-2">
+                  <i class="bi bi-check2-circle text-warning me-2"></i>
+                  Define a clear goal and deadline
+                </li>
+                <li class="mb-2">
+                  <i class="bi bi-check2-circle text-warning me-2"></i>
+                  Create a weekly plan and time blocks
+                </li>
+                <li class="mb-2">
+                  <i class="bi bi-check2-circle text-warning me-2"></i>
+                  Review progress and adjust
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="row mt-4 g-3">
+        <div class="col-lg-8">
+          <div class="card shadow-sm border-0">
+            <div class="card-header">Weekly Trend</div>
+            <div class="card-body">
+              <canvas id="trendChart" height="120"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="card shadow-sm border-0">
+            <div class="card-header">Category Averages</div>
+            <div class="card-body text-center">
+              <canvas id="categoryChart" height="200"></canvas>
+              <div class="mt-2 small-muted">
+                Latest week: <span id="latestWeek">N/A</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end charts -->
+    </div>
+  </div>
+</section>

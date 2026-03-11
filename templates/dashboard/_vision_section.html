@@ -1,0 +1,65 @@
+<section id="vision" class="card mb-4" data-aos="fade-up" data-aos-delay="300">
+  <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+    <span>Vision Board</span>
+    <button class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#addVisionModal">Add Item</button>
+  </div>
+  <div class="card-body">
+    {% if vision_items %}
+    <div id="visionBoardContainer" class="row row-cols-1 g-3">
+      {% for item in vision_items %}
+      <div class="col">
+        <div class="vision-item card h-100 overflow-hidden border-0 shadow-sm">
+          <img src="{{ item.img or 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=400' }}" 
+               class="vision-img card-img-top" style="height: 120px; object-fit: cover;">
+          <div class="card-body p-2 text-center">
+            <h6 class="small fw-bold mb-1">{{ item.category }}</h6>
+            <p class="very-small text-muted mb-2 card-text">"{{ item.quote }}"</p>
+            <!-- No delete button in sidebar for space, but could add on hover -->
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-3">
+      <p class="text-muted small mb-0">No visions yet. Visualize your future!</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .very-small { font-size: 0.75rem; line-height: 1.2; }
+</style>
+
+<!-- Add Vision Modal -->
+<div class="modal fade" id="addVisionModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Vision Item</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form action="{{ url_for('dashboard.add_vision') }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Image URL</label>
+            <input type="url" name="img" class="form-control" placeholder="https://unsplash.com/...">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Category</label>
+            <input type="text" name="category" class="form-control" placeholder="e.g. Travel, Health" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Inspirational Quote</label>
+            <textarea name="quote" class="form-control" rows="3" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-info text-white">Add Vision</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
