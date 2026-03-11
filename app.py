@@ -21,8 +21,9 @@ def create_app():
         MAIL_USERNAME=os.environ.get('MAIL_USERNAME'),
         MAIL_PASSWORD=os.environ.get('MAIL_PASSWORD'),
         MAIL_DEFAULT_SENDER=os.environ.get('MAIL_DEFAULT_SENDER', os.environ.get('MAIL_USERNAME')),
-        STRIPE_PUBLIC_KEY=os.environ.get('STRIPE_PUBLIC_KEY'),
-        STRIPE_SECRET_KEY=os.environ.get('STRIPE_SECRET_KEY')
+        LEMON_SQUEEZY_API_KEY=os.environ.get('LEMON_SQUEEZY_API_KEY'),
+        LEMON_SQUEEZY_STORE_ID=os.environ.get('LEMON_SQUEEZY_STORE_ID'),
+        LEMON_SQUEEZY_VARIANT_ID=os.environ.get('LEMON_SQUEEZY_VARIANT_ID')
     )
 
     # --- Initialize extensions ---

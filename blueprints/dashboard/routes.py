@@ -4,7 +4,7 @@ from extensions import db
 from models import WeeklyRow, VisionItem, Setting, JournalEntry, Habit, HabitLog, SavedTip, FocusSession, User
 from datetime import datetime
 import random
-import stripe
+import requests
 
 dashboard_bp = Blueprint('dashboard', __name__)
 
@@ -267,49 +267,37 @@ def delete_vision(item_id):
 @dashboard_bp.route('/create-checkout-session')
 @login_required
 def create_checkout_session():
-    stripe.api_key = current_app.config['STRIPE_SECRET_KEY']
-    try:
-        checkout_session = stripe.checkout.Session.create(
-            payment_method_types=['card'],
-            line_items=[
-                {
-                    'price_data': {
-                        'currency': 'usd',
-                        'unit_amount': 900,
-                        'product_data': {
-                            'name': 'Productivity Pro Monthly',
-                            'description': 'Unlimited habits, AI insights, and more.',
-                        },
-                        'recurring': {'interval': 'month'},
-                    },
-                    'quantity': 1,
-                },
-            ],
-            mode='subscription',
-            success_url=url_for('dashboard.success', _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
-            cancel_url=url_for('dashboard.cancel', _external=True),
-            client_reference_id=str(current_user.id)
-        )
-        return redirect(checkout_session.url, code=303)
-    except Exception as e:
-        flash(f"Error creating payment session: {str(e)}", "danger")
+    # Lemon Squeezy handles the UI. We just redirect to our specific variant checkout.
+    variant_id = current_app.config['LEMON_SQUEEZY_VARIANT_ID']
+    store_id = current_app.config['LEMON_SQUEEZY_STORE_ID']
+    
+    if not variant_id or not store_id:
+        flash("Billing is currently being optimized. Please check back in a few minutes.", "info")
         return redirect(url_for('dashboard.index'))
+        
+    # Build a hosted checkout link with user info pre-filled (optional)
+    checkout_url = f"https://your-store.lemonsqueezy.com/checkout/buy/{variant_id}"
+    checkout_url += f"?checkout[email]={current_user.username}@example.com" # Placeholder mapping
+    checkout_url += f"&checkout[custom][user_id]={current_user.id}"
+    
+    # NOTE: In a real production app, you'd use the LS API to generate a unique link 
+    # and then listen for their Webhook to set is_premium = True.
+    return redirect(checkout_url)
 
 @dashboard_bp.route('/success')
 @login_required
 def success():
-    session_id = request.args.get('session_id')
-    # In a real app, you'd verify the session with Stripe here
-    # For now, we'll just upgrade the user
+    # Placeholder: In a real app, the webhook handles this securely.
+    # For your MVP, we'll give you a manual upgrade button or use this redirect.
     current_user.is_premium = True
     db.session.commit()
-    flash('Welcome to Pro! Your features are now unlocked.', 'success')
+    flash('Upgrade successful! Welcome to Pro.', 'success')
     return redirect(url_for('dashboard.index'))
 
 @dashboard_bp.route('/cancel')
 @login_required
 def cancel():
-    flash('Upgrade cancelled. No charges were made.', 'info')
+    flash('Transaction cancelled.', 'info')
     return redirect(url_for('dashboard.index'))
 
 @dashboard_bp.route('/pro-analytics')

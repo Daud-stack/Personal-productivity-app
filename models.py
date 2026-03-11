@@ -10,7 +10,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(256))
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
     is_premium = db.Column(db.Boolean, default=False, nullable=False)
-    stripe_customer_id = db.Column(db.String(128))
+    payment_customer_id = db.Column(db.String(128))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
 
     @property
