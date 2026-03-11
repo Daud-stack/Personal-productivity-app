@@ -7,9 +7,13 @@ def create_app():
     app = Flask(__name__, instance_relative_config=True)
 
     # --- Config ---
+    db_url = os.environ.get('APP_DATABASE_URL', 'sqlite:///productivity.db')
+    if db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)
+
     app.config.from_mapping(
         SECRET_KEY=os.environ.get('SECRET_KEY', 'dev-secret-key'),
-        SQLALCHEMY_DATABASE_URI=os.environ.get('APP_DATABASE_URL', 'sqlite:///productivity.db'),
+        SQLALCHEMY_DATABASE_URI=db_url,
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         MAIL_SERVER=os.environ.get('MAIL_SERVER', 'smtp.googlemail.com'),
         MAIL_PORT=int(os.environ.get('MAIL_PORT', 587)),
