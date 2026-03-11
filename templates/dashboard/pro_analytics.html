@@ -1,0 +1,110 @@
+{% extends 'base.html' %} 
+
+{% block title %}Pro Insights · Productivity{% endblock %} 
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Header -->
+            <div class="d-flex align-items-center justify-content-between mb-5" data-aos="fade-down">
+                <div>
+                    <h1 class="h2 fw-bold mb-1">AI Growth Strategy</h1>
+                    <p class="text-muted">Pro-exclusive behavior analysis and optimization.</p>
+                </div>
+                <a href="{{ url_for('dashboard.index') }}" class="btn btn-outline-secondary rounded-pill">
+                    <i class="bi bi-arrow-left me-2"></i>Back to Cockpit
+                </a>
+            </div>
+
+            <!-- AI Insight Card -->
+            <div class="card border-0 shadow-lg mb-5 overflow-hidden" style="border-radius: 24px;" data-aos="fade-up">
+                <div class="card-header bg-primary py-4 text-center border-0">
+                    <div class="pro-badge mb-2">AI POWERED</div>
+                    <h4 class="text-white fw-bold mb-0">Your Personalized Performance Review</h4>
+                </div>
+                <div class="card-body p-5">
+                    <div class="row align-items-center mb-5">
+                        <div class="col-md-2 text-center text-md-start">
+                            <div class="ai-avatar pulse">
+                                <i class="bi bi-robot fs-1 text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-10 mt-3 mt-md-0">
+                            <h5 class="fw-bold">Gemini Analysis: "The Compound Effect"</h5>
+                            <p class="text-muted italic">"I've analyzed your habits and weekly scores. You are showing strong consistency in one area, but there's a significant bottleneck in your deep-work windows."</p>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="p-4 bg-light rounded-4 h-100">
+                                <h6 class="fw-bold text-success mb-3">
+                                    <i class="bi bi-lightning-fill me-2"></i>Top Strength
+                                </h6>
+                                <p class="small mb-0">Your **Health** score has maintained a 90% average for 3 weeks. This physical foundation is why your mental clarity is peaking early in the day.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-4 bg-light rounded-4 h-100">
+                                <h6 class="fw-bold text-warning mb-3">
+                                    <i class="bi bi-bullseye me-2"></i>Optimization Area
+                                </h6>
+                                <p class="small mb-0">Your **Finance** tracking often dips on Tuesdays. Data suggests you avoid financial review during high-stress career windows. Try pushing this to Sunday mornings.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 p-4 bg-primary-subtle rounded-4 text-center border border-primary-subtle">
+                        <h5 class="fw-bold mb-3">Pro Action Step</h5>
+                        <p class="mb-0 italic text-primary-emphasis">"Schedule a 15-minute 'Financial Clarity' session this Sunday at 10:00 AM. Pair it with your Morning Meditation habit for a 15% increase in weekly completion likelihood."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multi-Category Trends (Pro Only) -->
+             <div class="row g-4">
+                <div class="col-md-8">
+                    <div class="card border-0 shadow-sm h-100 p-4" style="border-radius: 20px;">
+                        <h6 class="fw-bold text-muted small text-uppercase mb-4">Correlation Matrix (Pro)</h6>
+                        <p class="text-center py-5 text-muted">Analyzing relationships between habit completion and focus session duration...</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                     <div class="card border-0 shadow-sm h-100 p-4 bg-dark text-white" style="border-radius: 20px;">
+                        <h6 class="fw-bold text-secondary-emphasis small text-uppercase mb-4">Upcoming Pro Features</h6>
+                        <ul class="list-unstyled small opacity-75">
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Export to PDF Report</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Custom Habit Reminders</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Focus Soundscapes</li>
+                        </ul>
+                    </div>
+                </div>
+             </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.ai-avatar {
+    width: 80px;
+    height: 80px;
+    background: rgba(13, 110, 253, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(13, 110, 253, 0.2);
+}
+.pulse {
+    animation: pulse-animation 2s infinite;
+}
+@keyframes pulse-animation {
+    0% { box-shadow: 0 0 0 0px rgba(13, 110, 253, 0.2); }
+    100% { box-shadow: 0 0 0 20px rgba(13, 110, 253, 0); }
+}
+.bg-primary-subtle { background-color: rgba(13, 110, 253, 0.05) !important; }
+.text-primary-emphasis { color: #052c65 !important; }
+.rounded-4 { border-radius: 1.5rem !important; }
+</style>
+{% endblock %}

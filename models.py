@@ -9,7 +9,13 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), index=True, unique=True, nullable=False)
     password_hash = db.Column(db.String(256))
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
+    is_premium = db.Column(db.Boolean, default=False, nullable=False)
+    stripe_customer_id = db.Column(db.String(128))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+
+    @property
+    def is_pro(self):
+        return self.is_premium or self.is_admin
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

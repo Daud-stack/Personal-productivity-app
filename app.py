@@ -20,7 +20,9 @@ def create_app():
         MAIL_USE_TLS=os.environ.get('MAIL_USE_TLS', 'true').lower() in ['true', 'on', '1'],
         MAIL_USERNAME=os.environ.get('MAIL_USERNAME'),
         MAIL_PASSWORD=os.environ.get('MAIL_PASSWORD'),
-        MAIL_DEFAULT_SENDER=os.environ.get('MAIL_DEFAULT_SENDER', os.environ.get('MAIL_USERNAME'))
+        MAIL_DEFAULT_SENDER=os.environ.get('MAIL_DEFAULT_SENDER', os.environ.get('MAIL_USERNAME')),
+        STRIPE_PUBLIC_KEY=os.environ.get('STRIPE_PUBLIC_KEY'),
+        STRIPE_SECRET_KEY=os.environ.get('STRIPE_SECRET_KEY')
     )
 
     # --- Initialize extensions ---
