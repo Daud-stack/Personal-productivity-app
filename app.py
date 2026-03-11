@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template # Render build trigger
 from extensions import db, login_manager, csrf, migrate, mail
 from models import User
 
